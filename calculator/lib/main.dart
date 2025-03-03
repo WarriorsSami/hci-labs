@@ -91,6 +91,12 @@ class _CalculatorHomeScreenState extends State<CalculatorHomeScreen> {
             _result = '0';
             _inputExpression = '';
             break;
+          case CalculatorKey.delete:
+            _inputExpression = _inputExpression.substring(
+              0,
+              _inputExpression.length - 1,
+            );
+            break;
           case CalculatorKey.equals:
             _result = _parse(_inputExpression);
             _inputExpression = _result;
@@ -129,8 +135,8 @@ enum CalculatorKey {
   subtract,
   multiply,
   divide,
-  percent,
   equals,
+  delete,
   reset,
   decimal,
   leftParenthesis,
@@ -138,9 +144,9 @@ enum CalculatorKey {
 
   static List<CalculatorKey> get keypad => [
     CalculatorKey.reset,
+    CalculatorKey.delete,
     CalculatorKey.leftParenthesis,
     CalculatorKey.rightParenthesis,
-    CalculatorKey.percent,
     CalculatorKey.seven,
     CalculatorKey.eight,
     CalculatorKey.nine,
@@ -191,7 +197,7 @@ enum CalculatorKey {
     CalculatorKey.subtract => '-',
     CalculatorKey.multiply => '*',
     CalculatorKey.divide => '/',
-    CalculatorKey.percent => '%',
+    CalculatorKey.delete => 'DEL',
     CalculatorKey.equals => '=',
     CalculatorKey.reset => 'AC',
     CalculatorKey.decimal => '.',
