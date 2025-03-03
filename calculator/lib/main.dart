@@ -1,3 +1,5 @@
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:bounce/bounce.dart';
 import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 
@@ -43,14 +45,19 @@ class _CalculatorHomeScreenState extends State<CalculatorHomeScreen> {
           children: [
             Flexible(
               flex: 1,
-              child: Text(
+              child: AutoSizeText(
                 _inputExpression,
-                style: TextStyle(color: Colors.grey, fontSize: 48),
+                style: TextStyle(color: Colors.grey, fontSize: 40),
+                maxLines: 1,
               ),
             ),
             Flexible(
               flex: 1,
-              child: Text(_result, style: TextStyle(fontSize: 48)),
+              child: AutoSizeText(
+                _result,
+                style: TextStyle(fontSize: 48),
+                maxLines: 1,
+              ),
             ),
             Flexible(
               flex: 4,
@@ -81,12 +88,12 @@ class _CalculatorHomeScreenState extends State<CalculatorHomeScreen> {
       setState(() {
         switch (key) {
           case CalculatorKey.reset:
-            _inputExpression = '';
             _result = '0';
+            _inputExpression = '';
             break;
           case CalculatorKey.equals:
             _result = _parse(_inputExpression);
-            _inputExpression = '';
+            _inputExpression = _result;
             break;
           default:
             _inputExpression += key.toString();
@@ -99,7 +106,9 @@ class _CalculatorHomeScreenState extends State<CalculatorHomeScreen> {
     final parser = GrammarParser();
     final expression = parser.parse(input);
     final contextModel = ContextModel();
-    final result = expression.evaluate(EvaluationType.REAL, contextModel);
+    double result = expression.evaluate(EvaluationType.REAL, contextModel);
+
+    result = result % 1 == 0 ? result : double.parse(result.toStringAsFixed(2));
 
     return result.toString();
   }
@@ -191,17 +200,21 @@ enum CalculatorKey {
   };
 
   Widget buildButton(VoidCallback onPressed) {
-    return TextButton(
-      onPressed: onPressed,
-      style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.all(
-          this == CalculatorKey.equals ? Colors.orange[500] : Colors.grey[800],
+    return Bounce(
+      child: TextButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          backgroundColor: WidgetStateProperty.all(
+            this == CalculatorKey.equals
+                ? Colors.orange[500]
+                : Colors.grey[800],
+          ),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          ),
         ),
-        shape: WidgetStateProperty.all(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        ),
+        child: Text(toString(), style: TextStyle(color: color, fontSize: 18)),
       ),
-      child: Text(toString(), style: TextStyle(color: color, fontSize: 24)),
     );
   }
 }
