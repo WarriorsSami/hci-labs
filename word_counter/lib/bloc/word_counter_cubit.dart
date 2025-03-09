@@ -32,7 +32,9 @@ class WordCounterCubit extends Cubit<WordCounterState> {
     final wordsPercentage = wordsMap.entries.fold<HashMap<String, double>>(
       HashMap(),
       (map, entry) {
-        map[entry.key] = entry.value / wordsCount;
+        map[entry.key] = double.parse(
+          (entry.value / wordsCount * 100).toStringAsFixed(1),
+        );
         return map;
       },
     );
