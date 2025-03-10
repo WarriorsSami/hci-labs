@@ -22,6 +22,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
     return AspectRatio(
       aspectRatio: 1.5,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           const SizedBox(height: 18),
           Expanded(
@@ -53,11 +54,12 @@ class PieChartWidgetState extends State<PieChartWidget> {
               ),
             ),
           ),
+          const SizedBox(height: 8),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children:
-                List.generate(widget.wordCount.length, (i) {
+                List.generate((widget.wordCount.length / 2).floor(), (i) {
                   final key = widget.wordCount.keys.elementAt(i);
                   return [
                     Indicator(
@@ -65,7 +67,25 @@ class PieChartWidgetState extends State<PieChartWidget> {
                       text: key,
                       isSquare: true,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
+                  ];
+                }).expand((element) => element).toList(),
+          ),
+          const SizedBox(width: 8),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children:
+                List.generate((widget.wordCount.length / 2).ceil(), (i) {
+                  final offset = (widget.wordCount.length / 2).floor();
+                  final key = widget.wordCount.keys.elementAt(i + offset);
+                  return [
+                    Indicator(
+                      color: AppColors.getColor(key),
+                      text: key,
+                      isSquare: true,
+                    ),
+                    const SizedBox(height: 2),
                   ];
                 }).expand((element) => element).toList(),
           ),

@@ -27,7 +27,7 @@ class Indicator extends StatelessWidget {
             color: color,
           ),
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: 2),
         Text(
           text,
           style: TextStyle(

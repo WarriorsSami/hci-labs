@@ -38,6 +38,7 @@ dependencies:
   fl_chart: ^0.70.2
   flutter_debouncer: ^2.0.0
   stopwordies: ^1.0.1
+  file_picker: ^6.1.1
 
 dev_dependencies:
   flutter_test:

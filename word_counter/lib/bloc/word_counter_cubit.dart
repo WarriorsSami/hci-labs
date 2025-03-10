@@ -1,5 +1,7 @@
 import 'dart:collection';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stopwordies/stopwordies.dart';
 
@@ -14,7 +16,7 @@ class WordCounterCubit extends Cubit<WordCounterState> {
     final wordRegExp = RegExp(r"\b\w+(?:'\w+)?\b");
     final wordsMap = wordRegExp
         .allMatches(text)
-        .map((match) => match.group(0)!)
+        .map((match) => match.group(0)!.toLowerCase())
         .where((word) => word.isNotEmpty && !stopWords.contains(word))
         .fold<HashMap<String, int>>(HashMap(), (map, word) {
           map.update(
@@ -39,6 +41,16 @@ class WordCounterCubit extends Cubit<WordCounterState> {
       },
     );
 
-    emit(WordCounterLoaded(wordsPercentage));
+    emit(WordCounterLoaded(text: text, wordCount: wordsPercentage));
+  }
+
+  Future<void> pickTextFile() async {
+    final result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      final file = File(result.files.single.path!);
+      final text = await file.readAsString();
+      countWords(text);
+    }
   }
 }

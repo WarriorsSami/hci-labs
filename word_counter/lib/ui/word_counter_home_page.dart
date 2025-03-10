@@ -44,7 +44,11 @@ class WordCounterHomePage extends StatelessWidget {
                         ),
                       )
                       : const Text('Enter some text to count the words'),
+                SizedBox(height: 20),
                 TextField(
+                  controller: TextEditingController(
+                    text: state is WordCounterLoaded ? state.text : '',
+                  ),
                   decoration: const InputDecoration(labelText: 'Text to count'),
                   maxLines: null,
                   onChanged: (text) {
@@ -64,7 +68,9 @@ class WordCounterHomePage extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          await context.read<WordCounterCubit>().pickTextFile();
+        },
         child: const Icon(Icons.upload),
       ),
     );
