@@ -108,7 +108,7 @@ class PieChartWidgetState extends State<PieChartWidget> {
       return PieChartSectionData(
         color: AppColors.getColor(text),
         value: percentage,
-        title: '${percentage.toStringAsFixed(0)}%',
+        title: '${percentage.toStringAsFixed(1)}%',
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,

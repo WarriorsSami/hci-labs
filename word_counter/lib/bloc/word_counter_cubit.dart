@@ -10,7 +10,7 @@ part 'word_counter_state.dart';
 class WordCounterCubit extends Cubit<WordCounterState> {
   WordCounterCubit() : super(WordCounterInitial());
 
-  Future<void> countWords(String text) async {
+  Future<HashMap<String, double>> _countWords(String text) async {
     final stopWords = await StopWordies.getFor(locale: SWLocale.en);
 
     final wordRegExp = RegExp(r"\b\w+(?:'\w+)?\b");
@@ -41,16 +41,30 @@ class WordCounterCubit extends Cubit<WordCounterState> {
       },
     );
 
-    emit(WordCounterLoaded(text: text, wordCount: wordsPercentage));
+    return wordsPercentage;
   }
 
-  Future<void> pickTextFile() async {
+  Future<void> countWordsForInputText(String text) async {
+    emit(
+      WordCounterLoadedForInputText(
+        text: text,
+        wordCount: await _countWords(text),
+      ),
+    );
+  }
+
+  Future<void> countWordsForTextFile() async {
     final result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
       final file = File(result.files.single.path!);
       final text = await file.readAsString();
-      countWords(text);
+      emit(
+        WordCounterLoadedForTextFile(
+          text: text,
+          wordCount: await _countWords(text),
+        ),
+      );
     }
   }
 }

@@ -20,14 +20,17 @@ class WordCounterHomePage extends StatelessWidget {
       body: BlocBuilder<WordCounterCubit, WordCounterState>(
         builder: (context, state) {
           return Padding(
-            padding: const EdgeInsets.fromLTRB(16, 32, 128, 16),
+            padding: const EdgeInsets.fromLTRB(16, 32, 100, 16),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 SizedBox(height: 20),
                 if (state is WordCounterInitial)
-                  const Text('Enter some text to count the words'),
-                if (state is WordCounterLoaded)
+                  const Text(
+                    'Enter some text to count the words',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                if (state is WordCounterLoadedState)
                   state.wordCount.isNotEmpty
                       ? Expanded(
                         child: Row(
@@ -43,12 +46,16 @@ class WordCounterHomePage extends StatelessWidget {
                           ],
                         ),
                       )
-                      : const Text('Enter some text to count the words'),
+                      : const Text(
+                        'Enter some text to count the words',
+                        style: TextStyle(fontSize: 20),
+                      ),
                 SizedBox(height: 20),
                 TextField(
-                  controller: TextEditingController(
-                    text: state is WordCounterLoaded ? state.text : '',
-                  ),
+                  controller:
+                      state is WordCounterLoadedForTextFile
+                          ? TextEditingController(text: state.text)
+                          : null,
                   decoration: const InputDecoration(labelText: 'Text to count'),
                   maxLines: null,
                   onChanged: (text) {
@@ -56,7 +63,9 @@ class WordCounterHomePage extends StatelessWidget {
                     _debouncer.debounce(
                       duration: duration,
                       onDebounce: () async {
-                        await context.read<WordCounterCubit>().countWords(text);
+                        await context
+                            .read<WordCounterCubit>()
+                            .countWordsForInputText(text);
                       },
                     );
                   },
@@ -69,7 +78,7 @@ class WordCounterHomePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await context.read<WordCounterCubit>().pickTextFile();
+          await context.read<WordCounterCubit>().countWordsForTextFile();
         },
         child: const Icon(Icons.upload),
       ),
