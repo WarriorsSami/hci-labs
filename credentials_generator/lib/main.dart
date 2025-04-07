@@ -1,9 +1,21 @@
-import 'package:credentials_generator/features/names_anonymizer/bloc/names_anonymizer_cubit.dart';
+import 'package:credentials_generator/features/names_anonymizer/bloc/names_anonymizer_bloc.dart';
 import 'package:credentials_generator/home_layout.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
+import 'features/passwords_generator/bloc/passwords_generator_bloc.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory:
+        kIsWeb
+            ? HydratedStorageDirectory.web
+            : HydratedStorageDirectory((await getTemporaryDirectory()).path),
+  );
   runApp(const CredentialsGeneratorApp());
 }
 
@@ -40,6 +52,20 @@ class CredentialsGeneratorApp extends StatelessWidget {
           displayMedium: TextStyle(fontSize: 16, color: Colors.black),
           displaySmall: TextStyle(fontSize: 12, color: Colors.black),
         ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blueGrey[500],
+            foregroundColor: Colors.white,
+            textStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+          ),
+        ),
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.blue,
           primary: Colors.blue,
@@ -48,8 +74,11 @@ class CredentialsGeneratorApp extends StatelessWidget {
       ),
       home: MultiBlocProvider(
         providers: [
-          BlocProvider<NamesAnonymizerCubit>(
-            create: (context) => NamesAnonymizerCubit(),
+          BlocProvider<NamesAnonymizerBloc>(
+            create: (context) => NamesAnonymizerBloc(),
+          ),
+          BlocProvider<PasswordsGeneratorBloc>(
+            create: (context) => PasswordsGeneratorBloc(),
           ),
         ],
         child: const HomeLayout(),

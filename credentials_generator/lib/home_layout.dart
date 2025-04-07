@@ -2,10 +2,11 @@ import 'package:credentials_generator/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 
+// TODO: Extract card with arrow buttons to a separate wrapper widget in shared
 final cards = [
   NamesAnonymizerPage(),
-  const PasswordsGeneratorPage(),
-  const EmailsExtractorPage(),
+  PasswordsGeneratorPage(),
+  EmailsExtractorPage(),
 ];
 
 class HomeLayout extends StatelessWidget {

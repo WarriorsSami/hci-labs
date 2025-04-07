@@ -1,15 +1,11 @@
-part of 'names_anonymizer_cubit.dart';
+part of 'names_anonymizer_bloc.dart';
 
 sealed class NamesAnonymizerState {}
 
-final class NamesAnonymizerInitialState extends NamesAnonymizerState {}
+final class NamesAnonymizerInitial extends NamesAnonymizerState {}
 
-final class NamesAnonymizerLoadedState extends NamesAnonymizerState {
-  final String inputText;
-  final String anonymizedText;
+final class NamesAnonymizerLoadSuccess extends NamesAnonymizerState {
+  final SensitiveText sensitiveText;
 
-  NamesAnonymizerLoadedState({
-    required this.inputText,
-    required this.anonymizedText,
-  });
+  NamesAnonymizerLoadSuccess({required this.sensitiveText});
 }

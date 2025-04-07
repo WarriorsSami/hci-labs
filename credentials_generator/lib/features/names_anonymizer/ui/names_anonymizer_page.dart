@@ -1,5 +1,9 @@
-import 'package:credentials_generator/features/names_anonymizer/bloc/names_anonymizer_cubit.dart'
-    show NamesAnonymizerCubit, NamesAnonymizerLoadedState, NamesAnonymizerState;
+import 'package:credentials_generator/features/names_anonymizer/bloc/names_anonymizer_bloc.dart'
+    show
+        NamesAnonymizerBloc,
+        NamesAnonymizerLoadSuccess,
+        NamesAnonymizerState,
+        NamesAnonymizerTextChanged;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,10 +34,11 @@ class NamesAnonymizerPage extends StatelessWidget {
               ],
             ),
             SizedBox(height: 20),
-            BlocListener<NamesAnonymizerCubit, NamesAnonymizerState>(
+            BlocListener<NamesAnonymizerBloc, NamesAnonymizerState>(
               listener: (context, state) {
-                if (state is NamesAnonymizerLoadedState) {
-                  anonymizedTextController.text = state.anonymizedText;
+                if (state is NamesAnonymizerLoadSuccess) {
+                  anonymizedTextController.text =
+                      state.sensitiveText.anonymizedText;
                 }
               },
               child: Row(
@@ -47,8 +52,8 @@ class NamesAnonymizerPage extends StatelessWidget {
                         border: OutlineInputBorder(),
                       ),
                       onChanged: (text) {
-                        context.read<NamesAnonymizerCubit>().anonymizeNames(
-                          text,
+                        context.read<NamesAnonymizerBloc>().add(
+                          NamesAnonymizerTextChanged(inputText: text),
                         );
                       },
                     ),
@@ -61,6 +66,7 @@ class NamesAnonymizerPage extends StatelessWidget {
                         labelText: "Anonymized Names",
                         border: OutlineInputBorder(),
                       ),
+                      readOnly: true,
                       controller: anonymizedTextController,
                     ),
                   ),
