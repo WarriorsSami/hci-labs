@@ -4,8 +4,7 @@ part 'sensitive_text.g.dart';
 
 @JsonSerializable()
 class SensitiveText {
-  final String inputText;
-  final String anonymizedText;
+  final String inputText, anonymizedText;
 
   SensitiveText({required this.inputText, required this.anonymizedText});
 

@@ -1,3 +1,4 @@
+import 'package:credentials_generator/features/emails_extractor/bloc/emails_extractor_bloc.dart';
 import 'package:credentials_generator/features/names_anonymizer/bloc/names_anonymizer_bloc.dart';
 import 'package:credentials_generator/home_layout.dart';
 import 'package:flutter/foundation.dart';
@@ -79,6 +80,9 @@ class CredentialsGeneratorApp extends StatelessWidget {
           ),
           BlocProvider<PasswordsGeneratorBloc>(
             create: (context) => PasswordsGeneratorBloc(),
+          ),
+          BlocProvider<EmailsExtractorBloc>(
+            create: (context) => EmailsExtractorBloc(),
           ),
         ],
         child: const HomeLayout(),

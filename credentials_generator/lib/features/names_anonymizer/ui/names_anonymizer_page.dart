@@ -15,67 +15,61 @@ class NamesAnonymizerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Theme.of(context).cardTheme.color,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.person),
-                SizedBox(width: 10),
-                Text(
-                  "Anonymize Names",
-                  style: Theme.of(context).textTheme.displayLarge,
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            BlocListener<NamesAnonymizerBloc, NamesAnonymizerState>(
-              listener: (context, state) {
-                if (state is NamesAnonymizerLoadSuccess) {
-                  anonymizedTextController.text =
-                      state.sensitiveText.anonymizedText;
-                }
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                    child: TextField(
-                      maxLines: 10,
-                      decoration: InputDecoration(
-                        labelText: "Input Names",
-                        border: OutlineInputBorder(),
-                      ),
-                      onChanged: (text) {
-                        context.read<NamesAnonymizerBloc>().add(
-                          NamesAnonymizerTextChanged(inputText: text),
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 40),
-                  Flexible(
-                    child: TextFormField(
-                      maxLines: 10,
-                      decoration: InputDecoration(
-                        labelText: "Anonymized Names",
-                        border: OutlineInputBorder(),
-                      ),
-                      readOnly: true,
-                      controller: anonymizedTextController,
-                    ),
-                  ),
-                ],
-              ),
+            Icon(Icons.person),
+            SizedBox(width: 10),
+            Text(
+              "Anonymize Names",
+              style: Theme.of(context).textTheme.displayLarge,
             ),
           ],
         ),
-      ),
+        SizedBox(height: 20),
+        BlocListener<NamesAnonymizerBloc, NamesAnonymizerState>(
+          listener: (context, state) {
+            if (state is NamesAnonymizerLoadSuccess) {
+              anonymizedTextController.text =
+                  state.sensitiveText.anonymizedText;
+            }
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: TextField(
+                  maxLines: 10,
+                  decoration: InputDecoration(
+                    labelText: "Input Names",
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (text) {
+                    context.read<NamesAnonymizerBloc>().add(
+                      NamesAnonymizerTextChanged(inputText: text),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(width: 40),
+              Flexible(
+                child: TextFormField(
+                  maxLines: 10,
+                  decoration: InputDecoration(
+                    labelText: "Anonymized Names",
+                    border: OutlineInputBorder(),
+                  ),
+                  readOnly: true,
+                  controller: anonymizedTextController,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

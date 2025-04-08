@@ -12,224 +12,218 @@ class PasswordsGeneratorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Theme.of(context).cardTheme.color,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.password),
-                SizedBox(width: 10),
-                Text(
-                  "Passwords Generator",
-                  style: Theme.of(context).textTheme.displayLarge,
-                ),
-              ],
+            Icon(Icons.password),
+            SizedBox(width: 10),
+            Text(
+              "Passwords Generator",
+              style: Theme.of(context).textTheme.displayLarge,
             ),
-            SizedBox(height: 20),
-            BlocConsumer<PasswordsGeneratorBloc, PasswordsGeneratorState>(
-              listener: (context, state) {
-                if (state is PasswordsGeneratorLoadSuccess) {
-                  passwordController.text = state.passwordData.password;
-                }
-              },
-              builder:
-                  (context, state) => SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    child: Column(
+          ],
+        ),
+        SizedBox(height: 20),
+        BlocConsumer<PasswordsGeneratorBloc, PasswordsGeneratorState>(
+          listener: (context, state) {
+            if (state is PasswordsGeneratorLoadSuccess) {
+              passwordController.text = state.passwordData.password;
+            }
+          },
+          builder:
+              (context, state) => SizedBox(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Flexible(
-                              child: TextField(
-                                maxLines: 1,
-                                decoration: InputDecoration(
-                                  labelText: "Generated Password",
-                                  border: OutlineInputBorder(),
-                                ),
-                                controller: passwordController,
-                                readOnly: true,
-                              ),
+                        Flexible(
+                          child: TextField(
+                            maxLines: 1,
+                            decoration: InputDecoration(
+                              labelText: "Generated Password",
+                              border: OutlineInputBorder(),
                             ),
-                            IconButton(
-                              icon: Icon(Icons.copy),
-                              onPressed: () {
-                                Clipboard.setData(
-                                  ClipboardData(text: passwordController.text),
-                                );
-                              },
-                            ),
-                          ],
+                            controller: passwordController,
+                            readOnly: true,
+                          ),
                         ),
-                        SizedBox(height: 10),
-                        Row(
+                        IconButton(
+                          icon: Icon(Icons.copy),
+                          onPressed: () {
+                            Clipboard.setData(
+                              ClipboardData(text: passwordController.text),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Slider(
+                            value:
+                                state is PasswordsGeneratorLoadSuccess
+                                    ? state.passwordData.settings.length
+                                        .toDouble()
+                                    : 12,
+                            min: 8,
+                            max: 32,
+                            divisions: 24,
+                            label:
+                                state is PasswordsGeneratorLoadSuccess
+                                    ? state.passwordData.settings.length
+                                        .toString()
+                                    : "12",
+                            onChanged: (value) {
+                              if (state is PasswordsGeneratorLoadSuccess) {
+                                context.read<PasswordsGeneratorBloc>().add(
+                                  PasswordsGeneratorSettingsChanged(
+                                    passwordSettings: state
+                                        .passwordData
+                                        .settings
+                                        .copyWith(length: value.toInt()),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Flexible(
-                              child: Slider(
-                                value:
-                                    state is PasswordsGeneratorLoadSuccess
-                                        ? state.passwordData.settings.length
-                                            .toDouble()
-                                        : 12,
-                                min: 8,
-                                max: 32,
-                                divisions: 24,
-                                label:
-                                    state is PasswordsGeneratorLoadSuccess
-                                        ? state.passwordData.settings.length
-                                            .toString()
-                                        : "12",
-                                onChanged: (value) {
-                                  if (state is PasswordsGeneratorLoadSuccess) {
-                                    context.read<PasswordsGeneratorBloc>().add(
-                                      PasswordsGeneratorSettingsChanged(
-                                        passwordSettings: state
-                                            .passwordData
-                                            .settings
-                                            .copyWith(length: value.toInt()),
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Checkbox(
-                                      value:
-                                          state is PasswordsGeneratorLoadSuccess
-                                              ? state
+                                Checkbox(
+                                  value:
+                                      state is PasswordsGeneratorLoadSuccess
+                                          ? state
+                                              .passwordData
+                                              .settings
+                                              .includeUppercase
+                                          : true,
+                                  onChanged: (value) {
+                                    if (state
+                                        is PasswordsGeneratorLoadSuccess) {
+                                      context
+                                          .read<PasswordsGeneratorBloc>()
+                                          .add(
+                                            PasswordsGeneratorSettingsChanged(
+                                              passwordSettings: state
                                                   .passwordData
                                                   .settings
-                                                  .includeUppercase
-                                              : true,
-                                      onChanged: (value) {
-                                        if (state
-                                            is PasswordsGeneratorLoadSuccess) {
-                                          context
-                                              .read<PasswordsGeneratorBloc>()
-                                              .add(
-                                                PasswordsGeneratorSettingsChanged(
-                                                  passwordSettings: state
-                                                      .passwordData
-                                                      .settings
-                                                      .copyWith(
-                                                        includeUppercase:
-                                                            value ?? false,
-                                                      ),
-                                                ),
-                                              );
-                                        }
-                                      },
-                                    ),
-                                    Text("Include Uppercase"),
-                                  ],
+                                                  .copyWith(
+                                                    includeUppercase:
+                                                        value ?? false,
+                                                  ),
+                                            ),
+                                          );
+                                    }
+                                  },
                                 ),
-                                Row(
-                                  children: [
-                                    Checkbox(
-                                      value:
-                                          state is PasswordsGeneratorLoadSuccess
-                                              ? state
+                                Text("Include Uppercase"),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                  value:
+                                      state is PasswordsGeneratorLoadSuccess
+                                          ? state
+                                              .passwordData
+                                              .settings
+                                              .includeNumbers
+                                          : true,
+                                  onChanged: (value) {
+                                    if (state
+                                        is PasswordsGeneratorLoadSuccess) {
+                                      context
+                                          .read<PasswordsGeneratorBloc>()
+                                          .add(
+                                            PasswordsGeneratorSettingsChanged(
+                                              passwordSettings: state
                                                   .passwordData
                                                   .settings
-                                                  .includeNumbers
-                                              : true,
-                                      onChanged: (value) {
-                                        if (state
-                                            is PasswordsGeneratorLoadSuccess) {
-                                          context
-                                              .read<PasswordsGeneratorBloc>()
-                                              .add(
-                                                PasswordsGeneratorSettingsChanged(
-                                                  passwordSettings: state
-                                                      .passwordData
-                                                      .settings
-                                                      .copyWith(
-                                                        includeNumbers:
-                                                            value ?? false,
-                                                      ),
-                                                ),
-                                              );
-                                        }
-                                      },
-                                    ),
-                                    Text("Include Numbers"),
-                                  ],
+                                                  .copyWith(
+                                                    includeNumbers:
+                                                        value ?? false,
+                                                  ),
+                                            ),
+                                          );
+                                    }
+                                  },
                                 ),
-                                Row(
-                                  children: [
-                                    Checkbox(
-                                      value:
-                                          state is PasswordsGeneratorLoadSuccess
-                                              ? state
+                                Text("Include Numbers"),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Checkbox(
+                                  value:
+                                      state is PasswordsGeneratorLoadSuccess
+                                          ? state
+                                              .passwordData
+                                              .settings
+                                              .includeSpecialCharacters
+                                          : true,
+                                  onChanged: (value) {
+                                    if (state
+                                        is PasswordsGeneratorLoadSuccess) {
+                                      context
+                                          .read<PasswordsGeneratorBloc>()
+                                          .add(
+                                            PasswordsGeneratorSettingsChanged(
+                                              passwordSettings: state
                                                   .passwordData
                                                   .settings
-                                                  .includeSpecialCharacters
-                                              : true,
-                                      onChanged: (value) {
-                                        if (state
-                                            is PasswordsGeneratorLoadSuccess) {
-                                          context
-                                              .read<PasswordsGeneratorBloc>()
-                                              .add(
-                                                PasswordsGeneratorSettingsChanged(
-                                                  passwordSettings: state
-                                                      .passwordData
-                                                      .settings
-                                                      .copyWith(
-                                                        includeSpecialCharacters:
-                                                            value ?? false,
-                                                      ),
-                                                ),
-                                              );
-                                        }
-                                      },
-                                    ),
-                                    Text("Include Special Characters"),
-                                  ],
+                                                  .copyWith(
+                                                    includeSpecialCharacters:
+                                                        value ?? false,
+                                                  ),
+                                            ),
+                                          );
+                                    }
+                                  },
                                 ),
+                                Text("Include Special Characters"),
                               ],
                             ),
                           ],
                         ),
-                        SizedBox(height: 10),
-                        ElevatedButton(
-                          onPressed: () {
-                            final passwordSettings =
-                                state is PasswordsGeneratorLoadSuccess
-                                    ? state.passwordData.settings
-                                    : PasswordSettings(
-                                      length: 12,
-                                      includeUppercase: true,
-                                      includeNumbers: true,
-                                      includeSpecialCharacters: true,
-                                    );
-
-                            context.read<PasswordsGeneratorBloc>().add(
-                              PasswordsGeneratorSettingsChanged(
-                                passwordSettings: passwordSettings,
-                              ),
-                            );
-                          },
-                          style: Theme.of(context).elevatedButtonTheme.style,
-                          child: Text("Generate Password"),
-                        ),
                       ],
                     ),
-                  ),
-            ),
-          ],
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        final passwordSettings =
+                            state is PasswordsGeneratorLoadSuccess
+                                ? state.passwordData.settings
+                                : PasswordSettings(
+                                  length: 12,
+                                  includeUppercase: true,
+                                  includeNumbers: true,
+                                  includeSpecialCharacters: true,
+                                );
+
+                        context.read<PasswordsGeneratorBloc>().add(
+                          PasswordsGeneratorSettingsChanged(
+                            passwordSettings: passwordSettings,
+                          ),
+                        );
+                      },
+                      style: Theme.of(context).elevatedButtonTheme.style,
+                      child: Text("Generate Password"),
+                    ),
+                  ],
+                ),
+              ),
         ),
-      ),
+      ],
     );
   }
 }
