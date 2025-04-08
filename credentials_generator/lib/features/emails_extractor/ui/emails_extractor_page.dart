@@ -17,7 +17,7 @@ class EmailsExtractorPage extends StatelessWidget {
             Icon(Icons.person),
             SizedBox(width: 10),
             Text(
-              "Anonymize Names",
+              "Emails Extractor",
               style: Theme.of(context).textTheme.displayLarge,
             ),
           ],
