@@ -14,7 +14,7 @@ class EmailsExtractorPage extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.person),
+            Icon(Icons.email),
             SizedBox(width: 10),
             Text(
               "Emails Extractor",
